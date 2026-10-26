@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+    <h2>{{ 'Edit book' if editing else 'Add book' }}</h2>
+    {% if not authors %}
+        <div class="alert">There are no authors yet. <a href="{{ url_for('author_form') }}">Add an author</a> first.</div>
+    {% endif %}
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        <label for="title">Title</label>
+        <input id="title" name="title" type="text" value="{{ book.title }}" class="{{ 'invalid' if errors.title }}">
+        <span class="error">{{ errors.title }}</span>
+
+        <label for="price">Price</label>
+        <input id="price" name="price" type="text" value="{{ book.price }}" class="{{ 'invalid' if errors.price }}">
+        <span class="error">{{ errors.price }}</span>
+
+        <label for="author_id">Author</label>
+        <select id="author_id" name="author_id" data-new-url="{{ url_for('author_form', next='book') }}" class="{{ 'invalid' if errors.author_id }}">
+            <option value="">-- choose an author --</option>
+            {% for a in authors %}
+            <option value="{{ a.author_id }}" {{ 'selected' if book.author_id|string == a.author_id|string }}>{{ a.author_id }} - {{ a.name }}</option>
+            {% endfor %}
+            <option value="__new__">+ Add a new author...</option>
+        </select>
+        <span class="error">{{ errors.author_id }}</span>
+
+        <label for="cover">Cover image (optional)</label>
+        {% if book.cover %}<img class="thumb big" src="{{ url_for('static', filename='uploads/' ~ book.cover) }}" alt=""><br>{% endif %}
+        <input id="cover" name="cover" type="file" accept="image/*" class="{{ 'invalid' if errors.cover }}">
+        <span class="error">{{ errors.cover }}</span>
+
+        <div class="form-actions">
+            <button type="submit">{{ 'Save changes' if editing else 'Add book' }}</button>
+            <a class="btn ghost-link" href="{{ url_for('books') }}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

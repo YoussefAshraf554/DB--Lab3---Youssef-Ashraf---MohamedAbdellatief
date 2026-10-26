@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Library</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="lib-page">
+<div class="lib-app">
+    <div class="topbar">
+        <h1>Library</h1>
+        <div class="who">
+            <span>Hi, {{ session.name }}</span>
+            <form method="POST" action="{{ url_for('logout') }}"><button class="ghost" type="submit">Log out</button></form>
+        </div>
+    </div>
+
+    <nav class="tabs">
+        <a class="tab {{ 'active' if not request.path.startswith('/authors') }}" href="{{ url_for('books') }}">Books</a>
+        <a class="tab {{ 'active' if request.path.startswith('/authors') }}" href="{{ url_for('authors') }}">Authors</a>
+    </nav>
+
+    {% for m in get_flashed_messages() %}<div class="notice">{{ m }}</div>{% endfor %}
+
+    {% block content %}{% endblock %}
+</div>
+<script src="{{ url_for('static', filename='js/library.js') }}"></script>
+</body>
+</html>

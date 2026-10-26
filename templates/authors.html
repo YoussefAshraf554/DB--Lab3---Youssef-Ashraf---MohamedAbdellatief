@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% from "macros.html" import edit_link, delete_form, view_toggle %}
+{% block content %}
+<div class="section-head">
+    <h2>Authors</h2>
+    <div class="head-tools">
+        {{ view_toggle() }}
+        <a class="btn" href="{{ url_for('author_form') }}">Add author</a>
+    </div>
+</div>
+{% if authors %}
+<div data-view="list">
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Photo</th><th>Author ID</th><th>Name</th><th>Country</th><th></th></tr></thead>
+        <tbody>
+        {% for a in authors %}
+        <tr class="clickable" data-author-id="{{ a.author_id }}">
+            <td>{% if a.photo %}<img class="thumb round" src="{{ url_for('static', filename='uploads/' ~ a.photo) }}" alt="">{% else %}<span class="thumb round ph"></span>{% endif %}</td>
+            <td>{{ a.author_id }}</td><td>{{ a.name }}</td><td>{{ a.country or '' }}</td>
+            <td><div class="actions">
+                {{ edit_link(url_for('author_form', author_id=a.author_id)) }}
+                {{ delete_form(url_for('delete_author', author_id=a.author_id), 'Delete this author? All of their books will be deleted too.') }}
+            </div></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <div class="grid">
+    {% for a in authors %}
+        <div class="gcard clickable" data-author-id="{{ a.author_id }}">
+            {% if a.photo %}<img class="cover round" src="{{ url_for('static', filename='uploads/' ~ a.photo) }}" alt="">{% else %}<div class="cover round ph"></div>{% endif %}
+            <div class="gtitle">{{ a.name }}</div>
+            <div class="gmeta">#{{ a.author_id }}{% if a.country %} · {{ a.country }}{% endif %}</div>
+            <div class="actions">
+                {{ edit_link(url_for('author_form', author_id=a.author_id)) }}
+                {{ delete_form(url_for('delete_author', author_id=a.author_id), 'Delete this author? All of their books will be deleted too.') }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="empty">No authors yet.</p>
+{% endif %}
+
+
+<div class="modal" id="authorModal" hidden>
+    <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modalName">
+        <button class="modal-close" type="button" aria-label="Close">&times;</button>
+        <div class="modal-head">
+            <img class="thumb round big" id="modalPhoto" alt="" hidden>
+            <span class="thumb round big ph" id="modalPhotoPh"></span>
+            <div>
+                <h2 id="modalName"></h2>
+                <p class="muted" id="modalCountry"></p>
+            </div>
+        </div>
+        <h3 id="modalCount"></h3>
+        <ul class="modal-books" id="modalBooks"></ul>
+    </div>
+</div>
+<script id="authorData" type="application/json">{{ author_data|tojson }}</script>
+{% endblock %}

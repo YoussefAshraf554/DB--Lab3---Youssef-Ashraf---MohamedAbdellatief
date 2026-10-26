@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% from "macros.html" import edit_link, delete_form, view_toggle %}
+{% block content %}
+<div class="section-head">
+    <h2>Books</h2>
+    <div class="head-tools">
+        {{ view_toggle() }}
+        <a class="btn" href="{{ url_for('book_form') }}">Add book</a>
+    </div>
+</div>
+{% if books %}
+<div data-view="list">
+    <div class="table-wrap">
+    <table>
+        <thead><tr><th>Cover</th><th>Book ID</th><th>Title</th><th>Price</th><th>Author ID</th><th>Author</th><th></th></tr></thead>
+        <tbody>
+        {% for b in books %}
+        <tr>
+            <td>{% if b.cover %}<img class="thumb" src="{{ url_for('static', filename='uploads/' ~ b.cover) }}" alt="">{% else %}<span class="thumb ph"></span>{% endif %}</td>
+            <td>{{ b.book_id }}</td><td>{{ b.title }}</td><td>{{ b.price|egp }}</td><td>{{ b.author_id }}</td><td>{{ names.get(b.author_id, '') }}</td>
+            <td><div class="actions">
+                {{ edit_link(url_for('book_form', book_id=b.book_id)) }}
+                {{ delete_form(url_for('delete_book', book_id=b.book_id), 'Are you sure you want to delete this book?') }}
+            </div></td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+
+    <div class="grid">
+    {% for b in books %}
+        <div class="gcard">
+            {% if b.cover %}<img class="cover" src="{{ url_for('static', filename='uploads/' ~ b.cover) }}" alt="">{% else %}<div class="cover ph"></div>{% endif %}
+            <div class="gtitle">{{ b.title }}</div>
+            <div class="gauthor">by {{ names.get(b.author_id, 'Unknown author') }}</div>
+            <div class="gmeta">#{{ b.book_id }} · {{ b.price|egp }}</div>
+            <div class="actions">
+                {{ edit_link(url_for('book_form', book_id=b.book_id)) }}
+                {{ delete_form(url_for('delete_book', book_id=b.book_id), 'Are you sure you want to delete this book?') }}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+</div>
+{% else %}
+<p class="empty">No books yet.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Create an account</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="card">
+    <h1>Create an account</h1>
+    <p class="muted">Sign up to start your to-do list.</p>
+
+    {% if errors.form %}<div class="alert">{{ errors.form }}</div>{% endif %}
+
+    <form id="registerForm" method="POST" action="{{ url_for('register') }}" novalidate>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" value="{{ name }}" class="{{ 'invalid' if errors.name }}">
+        <span class="error" id="nameError">{{ errors.name }}</span>
+
+        <label for="email">Email</label>
+        <input id="email" name="email" type="email" value="{{ email }}" class="{{ 'invalid' if errors.email }}">
+        <span class="error" id="emailError">{{ errors.email }}</span>
+
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password" class="{{ 'invalid' if errors.password }}">
+        <span class="error" id="passwordError">{{ errors.password }}</span>
+
+        <label for="confirm_password">Confirm password</label>
+        <input id="confirm_password" name="confirm_password" type="password" class="{{ 'invalid' if errors.confirm_password }}">
+        <span class="error" id="confirm_passwordError">{{ errors.confirm_password }}</span>
+
+        <button type="submit">Register</button>
+    </form>
+
+    <p class="switch">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+</div>
+
+<script src="{{ url_for('static', filename='js/register.js') }}"></script>
+
+</body>
+</html>

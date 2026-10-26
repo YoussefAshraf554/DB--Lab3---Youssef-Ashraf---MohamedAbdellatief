@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="form-card">
+    <h2>{{ 'Edit author' if editing else 'Add author' }}</h2>
+    <form method="POST" enctype="multipart/form-data" novalidate>
+        <label for="name">Name</label>
+        <input id="name" name="name" type="text" value="{{ author.name }}" class="{{ 'invalid' if errors.name }}">
+        <span class="error">{{ errors.name }}</span>
+
+        <label for="country">Country</label>
+        <input id="country" name="country" type="text" value="{{ author.country or '' }}" class="{{ 'invalid' if errors.country }}">
+        <span class="error">{{ errors.country }}</span>
+
+        <label for="photo">Photo (optional)</label>
+        {% if author.photo %}<img class="thumb big" src="{{ url_for('static', filename='uploads/' ~ author.photo) }}" alt=""><br>{% endif %}
+        <input id="photo" name="photo" type="file" accept="image/*" class="{{ 'invalid' if errors.photo }}">
+        <span class="error">{{ errors.photo }}</span>
+
+        <div class="form-actions">
+            <button type="submit">{{ 'Save changes' if editing else 'Add author' }}</button>
+            <a class="btn ghost-link" href="{{ url_for('book_form') if request.args.get('next') == 'book' else url_for('authors') }}">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
